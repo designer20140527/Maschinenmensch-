@@ -195,4 +195,73 @@ function animateSpot(spot) {
 // 初始化光晕效果
 document.addEventListener('DOMContentLoaded', () => {
     createGlowSpots();
+});
+
+// 添加滚动渐入效果
+document.addEventListener('DOMContentLoaded', function() {
+    // 选择所有需要动画的元素
+    const animatedElements = document.querySelectorAll('.project-card, .mission-content, .section-header, .use-cases-wrapper, .revolution-content');
+    
+    // 创建 Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // 当元素进入视口时
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                // 元素显示后不再观察
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.2, // 当20%的元素可见时触发
+        rootMargin: '0px 0px -100px 0px' // 提前触发一点
+    });
+    
+    // 开始观察所有元素
+    animatedElements.forEach(element => {
+        element.classList.add('will-animate');
+        observer.observe(element);
+    });
+});
+
+// 视差滚动效果
+document.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        const circles = document.querySelectorAll('.circle');
+        
+        circles.forEach((circle, index) => {
+            // 不同的圆以不同的速度移动
+            const speed = 0.05 + (index * 0.01);
+            const yPos = scrollPosition * speed;
+            circle.style.transform = `translate(-50%, calc(-50% - ${yPos}px))`;
+        });
+        
+        // Hero 图片视差效果
+        const heroImage = document.querySelector('.hero-image');
+        if (heroImage) {
+            heroImage.style.transform = `translateY(${scrollPosition * 0.1}px)`;
+        }
+    });
+});
+
+// 图片加载动画
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        // 设置初始状态
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.5s ease';
+        
+        // 图片加载完成后淡入
+        img.onload = function() {
+            img.style.opacity = '1';
+        };
+        
+        // 如果图片已经缓存，直接显示
+        if (img.complete) {
+            img.style.opacity = '1';
+        }
+    });
 }); 
